@@ -1,0 +1,17 @@
+namespace: adguard-ingress
+resources:
+  - ns.yaml
+  - secrets.yaml
+  - account.yaml
+  - deployment.yaml
+
+images:
+  - name: ghcr.io/reddec/kube-adguard-ing
+    newTag: 1.0.0
+
+configMapGenerator:
+  - files:
+      - static.yaml
+    name: static
+    options:
+      disableNameSuffixHash: true

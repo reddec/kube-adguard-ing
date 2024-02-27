@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adguard-ingress
+  labels:
+    app: adguard-ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adguard-ingress
+  template:
+    metadata:
+      labels:
+        app: adguard-ingress
+    spec:
+      serviceAccountName: adguard-ingress
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      imagePullSecrets:
+        - name: private-registry
+      containers:
+        - name: adguard-ingress
+          image: ghcr.io/reddec/kube-adguard-ing
+          env:
+            - name: ADGUARD_URL
+              value: "https://dns.exmple.com"
+            - name: STATIC_PATH
+              value: /data/static.yaml
+          envFrom:
+            - secretRef:
+                name: adguard-ingress-access
+
+          volumeMounts:
+            - mountPath: /data
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: static

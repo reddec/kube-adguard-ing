@@ -1,0 +1,6 @@
+# add more domains here if needed
+
+- domain: foo.example.com
+  address:
+    - 1.2.3.4
+
